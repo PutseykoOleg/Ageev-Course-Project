@@ -141,7 +141,7 @@ namespace TextLibrary
                 {
                     using(StreamWriter sw = new StreamWriter(path, false, System.Text.Encoding.Default))
                     {
-                        sw.Write(" " + obj.instance);
+                        sw.Write(obj.instance);
                     }
                 } catch (Exception e)
                 {
@@ -343,8 +343,6 @@ namespace TextLibrary
                     isCorrect &= Word.isCorrect(trimmedWord);
                 }
             }
-
-            Console.WriteLine("Sentence " + value + ": " + isCorrect);
 
             return isCorrect;
         }
