@@ -1,0 +1,10 @@
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\bin\Debug\CourseProject - Text Library.exe.config
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\bin\Debug\CourseProject - Text Library.exe
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\bin\Debug\CourseProject - Text Library.pdb
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\obj\Debug\CourseProject - Text Library.csprojAssemblyReference.cache
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\obj\Debug\TextLibrary.MainForm.resources
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\obj\Debug\CourseProject___Text_Library.Properties.Resources.resources
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\obj\Debug\CourseProject - Text Library.csproj.GenerateResource.cache
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\obj\Debug\CourseProject - Text Library.csproj.CoreCompileInputs.cache
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\obj\Debug\CourseProject - Text Library.exe
+C:\Users\olego\source\repos\CourseProject - Text Library\CourseProject - Text Library\obj\Debug\CourseProject - Text Library.pdb
