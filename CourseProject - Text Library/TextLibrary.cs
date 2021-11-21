@@ -445,7 +445,6 @@ namespace TextLibrary
                  */
                 else if (!new Regex(@"(.*[^(((,|\-|\(|\[|{|\s)(?=(\.|!|\?)))+)?]+(\.|!|\?)+)$").IsMatch(value))
                 {
-                    Console.WriteLine(value);
                     errorHandler.SetError("Неверный конец предложения - \"" + value + "\"");
                     isCorrect = false;
                 }
