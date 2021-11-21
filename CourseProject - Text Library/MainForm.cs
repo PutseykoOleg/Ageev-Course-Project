@@ -16,7 +16,10 @@ namespace TextLibrary
         // Путь до файла считывания/записи
         private const string PATH_TO_FILE = "./text.txt";
 
-        // Текст, содержащийся в поле ввода
+        /** Текст, содержащийся в поле ввода
+         * 
+         * Отношение композиции (MainForm - Text)
+         */
         private Text text = new Text();
 
         // Индексы считанных предложений и слов
