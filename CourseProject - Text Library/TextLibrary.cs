@@ -48,7 +48,7 @@ namespace TextLibrary
             currentError = null;
         }
 
-        public bool HasError()
+        public static bool HasError()
         {
             return !String.IsNullOrEmpty(currentError);
         }
@@ -152,7 +152,7 @@ namespace TextLibrary
                     }
 
                     // Если переданный индекс больше суммы слов во всех предложениях, то вызвать ошибку
-                    if (index >= countOfWords && !errorHandler.HasError())
+                    if (index >= countOfWords && !ErrorHandler.HasError())
                     {
                         errorHandler.SetError("Достигнут конец файла, слово не было считано");
                     }
@@ -179,7 +179,7 @@ namespace TextLibrary
                     }
 
                     // Если переданный индекс больше суммы слов во всех предложениях, то вызвать ошибку
-                    if (index >= text.containedSentences.Count && !errorHandler.HasError())
+                    if (index >= text.containedSentences.Count && !ErrorHandler.HasError())
                     {
                         errorHandler.SetError("Достигнут конец файла, предложение не было считано");
                     }
@@ -202,15 +202,15 @@ namespace TextLibrary
             }
         }
 
-        public static async void WriteToFile(string path, LanguageUnit obj)
+        public static async void WriteToFile(string path, LanguageUnit targetObj)
         {
-            if(obj is Word || obj is Sentence || obj is Text)
+            if(!ErrorHandler.HasError() && (targetObj is Word || targetObj is Sentence || targetObj is Text))
             {
                 try
                 {
                     using(StreamWriter sw = new StreamWriter(path, false, System.Text.Encoding.Default))
                     {
-                        sw.Write(obj.instance);
+                        sw.Write(targetObj.instance);
                     }
                 } catch (Exception e)
                 {
