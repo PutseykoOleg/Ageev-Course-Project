@@ -16,6 +16,7 @@ namespace TextLibrary
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            // Отношение ассоциации (Program - MainForm)
             Application.Run(new MainForm());
         }
     }
