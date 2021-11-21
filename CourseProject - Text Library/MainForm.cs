@@ -13,103 +13,131 @@ namespace TextLibrary
 {
     public partial class MainForm : Form
     {
+        // Путь до файла считывания/записи
         private const string PATH_TO_FILE = "./text.txt";
 
-        private Text text = new Text("");
+        // Текст, содержащийся в поле ввода
+        private Text text = new Text();
 
+        // Индексы считанных предложений и слов
         private int indexOfReadedSentence = 0;
         private int indexOfReadedWord = 0;
 
+        // Конструктор класса
         public MainForm()
         {
+            // Инициализация формы
             InitializeComponent();
         }
 
+        // Метод демонстрации ошибки
         public void ShowError(string message)
         {
+            // Вывод сообщения в форму
             errorMessage.Text = message;
         }
 
+        // Метод, вызывающийся при загрузке формы
         private void MainForm_Load(object sender, EventArgs e)
         {
-            textArea.Text = text.instance;
-
+            // Установка списков предложений и слов только для чтения
             listOfSentences.ReadOnly = true;
             listOfWords.ReadOnly = true;
 
+            // Линковка обработчика ошибок и созданной формы
             ErrorHandler.form = this;
         }
 
+        // Метод, вызывающийся при изменении текста пользователем
         private void textArea_TextChanged(object sender, EventArgs e)
         {
+            // Обнуление списков предложений и слов
             listOfSentences.Text = "";
             listOfWords.Text = "";
-            errorMessage.Text = "";
 
+            // Удаление ошибки
+            errorMessage.Text = "";
+            ErrorHandler.UnsetError();
+
+            // Инициализация объекта текста и вместе с тем вызов ошибок, если они имеются
             text.instance = textArea.Text;
+            // Общее количество слов
             int countOfWords = 0;
 
+            // Проход по каждому найденному предложению
             for (int i = 0; i < text.containedSentences.Count; i++)
             {
+                // Текущее предложение
                 Sentence sentence = text.containedSentences[i];
 
+                // Вывод найденного предложения
                 listOfSentences.Text += (i + 1) + ") " + sentence.instance + Environment.NewLine;
 
+                // Проход по каждому найденному слову
                 foreach (Word word in sentence.containedWords)
                 {
+                    // Вывод найденного слова
                     listOfWords.Text += (++countOfWords) + ") " + word.instance + Environment.NewLine;
                 }
             }
         }
 
+        // Метод, вызывающийся при нажатии на кнопку считывания текста
         private void readTextButton_Click(object sender, EventArgs e)
         {
-            Text text = new Text("");
+            // Целевой объект считывания
+            Text text = new Text();
 
+            // Считывание текста из файла
             FileHandler.ReadFromFile(PATH_TO_FILE, text);
 
-            if (TextLibrary.Text.isCorrect(text.instance))
+            // Если текст не пуст, т.е. корректен и был успешно считан, вывод его в поле ввода
+            if (!text.IsEmpty())
             {
-                textArea.Text += text.instance + " ";
+                // Добавление считанного текста в конец к введенному
+                textArea.Text += text.instance;
             }
         }
 
+        // Метод, вызывающийся при нажатии на кнопку считывания предложения
         private void readSentenceButton_Click(object sender, EventArgs e)
         {
-            Text text = new Text("");
+            // Целевой объект считывания
+            Sentence sentense = new Sentence();
 
-            FileHandler.ReadFromFile(PATH_TO_FILE, text);
+            // Считывание предложения из файла
+            FileHandler.ReadFromFile(PATH_TO_FILE, sentense, indexOfReadedSentence++);
 
-            if (TextLibrary.Text.isCorrect(text.instance) && indexOfReadedSentence < text.containedSentences.Count)
+            // Если предложение не пусто, т.е. корректно и было успешно считано, вывод его в поле ввода
+            if (!sentense.IsEmpty())
             {
-                textArea.Text += text.containedSentences[indexOfReadedSentence].instance + " ";
-                indexOfReadedSentence++;
+                // Добавление считанного предложения в конец к введенному тексту
+                textArea.Text += sentense.instance;
             }
         }
 
+        // Метод, вызывающийся при нажатии на кнопку считывания слова
         private void readWordButton_Click(object sender, EventArgs e)
         {
-            Text text = new Text("");
+            // Целевой объект считывания
+            Word word = new Word();
 
-            FileHandler.ReadFromFile(PATH_TO_FILE, text);
+            // Считывание слова из файла
+            FileHandler.ReadFromFile(PATH_TO_FILE, word, indexOfReadedWord++);
 
-            indexOfReadedSentence += indexOfReadedSentence < text.containedSentences.Count && 
-                indexOfReadedWord < text.containedSentences[indexOfReadedSentence].containedWords.Count ? 0 : 1;
-            
-            if (
-                TextLibrary.Text.isCorrect(text.instance) && 
-                indexOfReadedSentence < text.containedSentences.Count &&
-                indexOfReadedWord < text.containedSentences[indexOfReadedSentence].containedWords.Count
-            )
+            // Если слово не пусто, т.е. корректно и было успешно считано, вывод его в поле ввода
+            if (!word.IsEmpty())
             {
-                textArea.Text += text.containedSentences[indexOfReadedSentence].containedWords[indexOfReadedWord].instance + " ";
-                indexOfReadedWord++;
+                // Добавление считанного слова в конец к введенному тексту
+                textArea.Text += word.instance;
             }
         }
 
+        // Метод, вызывающийся при нажатии на кнопку записи введенного текста в файл
         private void writeButton_Click(object sender, EventArgs e)
         {
-            FileHandler.WriteToFile(PATH_TO_FILE, new Text(textArea.Text));
+            // Запись введенного текста в файл
+            FileHandler.WriteToFile(PATH_TO_FILE, text);
         }
     }
 }
