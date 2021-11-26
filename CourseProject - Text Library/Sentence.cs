@@ -287,25 +287,10 @@ namespace TextLibrary
             // Замена нескольких идущих подряд отдельных символов пробелом
             correctValue = Regex.Replace(correctValue, @"\s+(\(|\)|\[|\]|{|}|'|""|,|\.|!|\?)*\s+", (Match match) => " ");
 
+            // Очистка содержащихся слов
+            containedWords.Clear();
             // Исправление слов
-            correctValue = Regex.Replace(correctValue, @"[^(\s|\(|\)|\[|\]|{|}|'|""|,|\.|!|\?)]+", (Match match) => {
-                // Создание слова без ошибок
-                Word word = new Word();
-                word.SetWithCorrecting(match.Value);
-
-                // Если значение было установлено успешно (если слово корректно)
-                if (!word.IsEmpty())
-                {
-                    // Добавление слова в список содержащихся слов данного предложения
-                    newContainedWords.Add(word);
-
-                    // Замена соответствующего слова в исходной строке
-                    return word.instance;
-                }
-
-                // Удаление слова из исходного строки
-                return "";
-            });
+            correctValue = Regex.Replace(correctValue, @"[^(\s|\(|\)|\[|\]|{|}|'|""|,|\.|!|\?)]+", CorrectWord);
 
             // Если непосредственное содрежимое предложения отсутствует, удалить его
             if (new Regex(@"^(\.|!|\?)+$").IsMatch(correctValue)) correctValue = "";
@@ -319,6 +304,25 @@ namespace TextLibrary
             {
                 Erase();
             }
+        }
+
+        private string CorrectWord(Match match) {
+            // Создание слова без ошибок
+            Word word = new Word();
+            word.SetWithCorrecting(match.Value);
+
+            // Если значение было установлено успешно (если слово корректно)
+            if (!word.IsEmpty())
+            {
+                // Добавление слова в список содержащихся слов данного предложения
+                containedWords.Add(word);
+
+                // Замена соответствующего слова в исходной строке
+                return word.instance;
+            }
+
+            // Удаление слова из исходного строки
+            return "";
         }
     }
 }
