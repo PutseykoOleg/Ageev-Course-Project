@@ -39,6 +39,7 @@ namespace TextLibrary
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.errorMessage = new System.Windows.Forms.Label();
+            this.correctButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textArea
@@ -135,11 +136,22 @@ namespace TextLibrary
             this.errorMessage.Size = new System.Drawing.Size(0, 17);
             this.errorMessage.TabIndex = 9;
             // 
+            // correctButton
+            // 
+            this.correctButton.Location = new System.Drawing.Point(590, 482);
+            this.correctButton.Name = "correctButton";
+            this.correctButton.Size = new System.Drawing.Size(189, 34);
+            this.correctButton.TabIndex = 10;
+            this.correctButton.Text = "Исправить";
+            this.correctButton.UseVisualStyleBackColor = true;
+            this.correctButton.Click += new System.EventHandler(this.correctButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(829, 544);
+            this.Controls.Add(this.correctButton);
             this.Controls.Add(this.errorMessage);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -172,6 +184,7 @@ namespace TextLibrary
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label errorMessage;
+        private System.Windows.Forms.Button correctButton;
     }
 }
 

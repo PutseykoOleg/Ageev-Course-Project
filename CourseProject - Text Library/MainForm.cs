@@ -38,6 +38,21 @@ namespace TextLibrary
         {
             // Вывод сообщения в форму
             errorMessage.Text = message;
+
+            // Подсветка кнопки исправления текста
+            correctButton.BackColor = Color.FromArgb(255, 192, 192);
+            correctButton.ForeColor = Color.FromArgb(192, 0, 0);
+        }
+
+        // Метод удаляющий ошибку
+        public void HideError()
+        {
+            // Удаление сообщения
+            errorMessage.Text = "";
+
+            // Подсветка кнопки исправления текста
+            correctButton.BackColor = SystemColors.Control;
+            correctButton.ForeColor = SystemColors.ControlText;
         }
 
         // Метод, вызывающийся при загрузке формы
@@ -59,8 +74,8 @@ namespace TextLibrary
             listOfWords.Text = "";
 
             // Удаление ошибки
-            errorMessage.Text = "";
             ErrorHandler.UnsetError();
+            HideError();
 
             // Инициализация объекта текста и вместе с тем вызов ошибок, если они имеются
             text.instance = textArea.Text;
@@ -141,6 +156,23 @@ namespace TextLibrary
         {
             // Запись введенного текста в файл
             FileHandler.WriteToFile(PATH_TO_FILE, text);
+        }
+
+        private void correctButton_Click(object sender, EventArgs e)
+        {
+            // Выключаем логи, чтобы при обновлении текстового поля не выскачили
+            //ErrorHandler.log = false;
+
+            Text text = new Text();
+            text.SetWithCorrecting(textArea.Text);
+
+            textArea.Text = !text.IsEmpty() ? text.instance : "";
+
+            //ErrorHandler.log = true;
+
+            // Убираем ошибку
+            ErrorHandler.UnsetError();
+            HideError();
         }
     }
 }

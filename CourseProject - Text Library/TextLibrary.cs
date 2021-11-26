@@ -85,6 +85,13 @@ namespace TextLibrary
         bool IsEmpty();
     }
 
+    // Интерфейс, описывающий  объект (можно применить не только к единицам языка)
+    // Интерфейс, описывающий исправляемый объект (можно применить не только к единицам языка)
+    public interface ICorrectable
+    {
+        void SetWithCorrecting(string value);
+    }
+
     // Класс, определяющий методы работы с файлом и представляемыми библиотекой классами единиц языка
     public class FileHandler
     {
@@ -234,7 +241,7 @@ namespace TextLibrary
      * Отношение наследования (Text - LanguageUnit)
      * Отношение реализации (Text - IErasable)
      */
-    public class Text : LanguageUnit, IErasable
+    public class Text : LanguageUnit, IErasable, ICorrectable
     {
         /** 
          * Содержащиеся корректные предложения в тексте
@@ -257,7 +264,6 @@ namespace TextLibrary
              * - Последовательность символов может быть пустой.
              * - Последовательность символов может содержать сколько угодно предложений (в т.ч. простых).
              * - Текст корректен тогда, когда корректно каждое его предложение.
-             * - Текст корректен тогда, когда пуст.
              */
         set
             {
@@ -366,6 +372,58 @@ namespace TextLibrary
             this._instance = null;
             containedSentences.Clear();
         }
+
+        // Метод устанавливающий в качестве нового значения откорректированное переданное
+        public void SetWithCorrecting(string value)
+        {
+            // Исправленное значение
+            string correctValue = value.Trim();
+            // Список содержащихся предложений в исправленном тексте
+            List<Sentence> newContainedSentences = new List<Sentence>();
+
+            // Добавление символа конца предложения (если его нет) в конец текста
+            if(!new Regex(@"(\.|!|\?)$").IsMatch(correctValue))
+            {
+                correctValue = correctValue + '.';
+            }
+
+            // Исправление каждого предложения в тексте
+            correctValue = Regex.Replace(correctValue, @"[^(\.|!|\?)]+(\.|!|\?)+", (Match match) =>
+            {
+                // Исправление текущего предложения
+                Sentence sentence = new Sentence();
+                sentence.SetWithCorrecting(match.Value);
+
+                // Если успешно найдено и исправлено
+                if(!sentence.IsEmpty())
+                {
+                    // Добавить исправленное предложение в список содержащихся
+                    newContainedSentences.Add(sentence);
+                    // Замена предложения в исходном тексте на исправленное
+                    return sentence.instance;
+                }
+
+                // Если нет, то удалить предложение их исходного текста
+                return "";
+            });
+
+            // Добавление пробела после символов окончания строки
+            correctValue = Regex.Replace(correctValue, @"(\.|!|\?)+([^\s])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
+
+            // Удаление пустого предложения вначале строки, если такое возникло
+            correctValue = Regex.Replace(correctValue, @"^(\.|!|\?)+\s*", (Match match) => "");
+
+            // Если в тексте есть хотя бы одно исправленное предложение, т.е. если он не пуст
+            if (!String.IsNullOrEmpty(correctValue))
+            {
+                // Установка нового значения
+                _instance = correctValue;
+                containedSentences = newContainedSentences;
+            } else
+            {
+                Erase();
+            }
+        }
     }
 
     /** 
@@ -374,7 +432,7 @@ namespace TextLibrary
      * Отношение наследования (Sentence - LanguageUnit)
      * Отношение реализации (Sentence - IErasable)
      */
-    public class Sentence : LanguageUnit, IErasable
+    public class Sentence : LanguageUnit, IErasable, ICorrectable
     {
         /** Содержащиеся корректные слова в предложении
          * 
@@ -472,7 +530,7 @@ namespace TextLibrary
                  * 
                  * aaa b aaa c
                  */
-                else if (!new Regex(@"(.*    [^ ((  (,|\-|\(|\[|{|\s)(?=(\.|!|\?))    )+)? ]+     (\.|!|\?)+)$").IsMatch(value))
+                else if (!new Regex(@"(.*[^(((,|\-|\(|\[|{|\s)(?=(\.|!|\?)))+)]+(\.|!|\?)+)$").IsMatch(value))
                 {
                     errorHandler.SetError("Неверный конец предложения - \"" + value + "\"");
                     isCorrect = false;
@@ -575,6 +633,115 @@ namespace TextLibrary
             this._instance = null;
             containedWords.Clear();
         }
+
+        // Метод устанавливающий в качестве нового значения откорректированное переданное
+        public void SetWithCorrecting(string value)
+        {
+            // Исправленное значение, инициализируем, сразу убирая лишние пробелы по краям, чтобы потом не тратить ресурсы на это
+            string correctValue = value.Trim();
+
+            // Содержащиеся в исправленном предложении слова
+            List<Word> newContainedWords = new List<Word>();
+
+            /** 
+             * Если не содержит признак начала предложения (заглавная буква, кавычки или цифра), то предполагается,
+             * что передается некорректное предложение
+             */
+            if (!new Regex("^([A-ZА-ЯЁ]|\'|\"|[0-9])").IsMatch(correctValue))
+            {
+                /** 
+                 * Если первая буква не заглавная, заменить ее заглавной
+                 * 
+                 * Это единственное что мы можем исправить в текущем признаке, т.к. добавлять что-то в предложение нельзя,
+                 * а заменять или удалять можно
+                 */
+                if (new Regex("^[a-zа-яё]").IsMatch(correctValue))
+                {
+                    correctValue = correctValue.Substring(0, 1).ToUpper() + (correctValue.Length > 1 ? correctValue.Substring(1) : "");
+                }
+                // Если мы не можем исправить предложение - стираем его
+                else
+                {
+                    correctValue = "";
+                }
+            }
+
+            /** 
+             * Если не содержит признак конца предложения или содержит нелогическое его окончание, то предполагается,
+             * что передается некорректное предложение
+             * 
+             * Проверяем сразу после предыдущей проверки (без else), т.к. они не взаимосвязаны (нет перекрытия ошибки)
+             */
+            if (!new Regex(@"(.*[^(((,|\-|\(|\[|{|\s)(?=(\.|!|\?)))+)]+(\.|!|\?)+)$").IsMatch(correctValue))
+            {
+                /**
+                 * Если предложение без заключающего знака препинания - добавить точку (по умолчанию)
+                 */
+                if (!new Regex(@"(\.|!|\?)$").IsMatch(correctValue))
+                {
+                    correctValue = correctValue + '.';
+                }
+
+                /**
+                 * Сразу проверяем дальше
+                 * 
+                 * Если перед заключающим знаком препинания есть какой-либо ненужный символ (нелогичное окончание предложения),
+                 * убрать этот символ
+                 * 
+                 * Делаем это во вложенном цикле, чтобы удалить все такие символы
+                 */
+                while (new Regex(@"(,|\-|\(|\[|{|\s)(\.|!|\?)$").IsMatch(correctValue))
+                {
+                    correctValue = correctValue.Substring(0, correctValue.Length - 2) + correctValue[correctValue.Length - 1];
+                }
+            }
+
+            // Если в значении несколько предложений, то оставить только последнее
+            char[] endOfSentence = { '.', '!', '?' };
+            correctValue = correctValue.Substring(0, correctValue.IndexOfAny(endOfSentence) + 1);
+
+            // Добавление пробелов после тех знаков, после которых это необходимо
+            correctValue = Regex.Replace(correctValue, @"(,|\)|\]|})([^\s])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
+
+            // Добавление пробелов перед теми знаками, перед которыми это необходимо
+            correctValue = Regex.Replace(correctValue, @"([^\s])(\(|\[|{)", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
+
+            // Замена нескольких идущих подряд отдельных символов пробелом
+            correctValue = Regex.Replace(correctValue, @"\s+(\(|\)|\[|\]|{|}|'|""|,|\.|!|\?)*\s+", (Match match) => " ");
+
+            // Исправление слов
+            correctValue = Regex.Replace(correctValue, @"[^(\s|\(|\)|\[|\]|{|}|'|""|,|\.|!|\?)]+", (Match match) => {
+                // Создание слова без ошибок
+                Word word = new Word();
+                word.SetWithCorrecting(match.Value);
+
+                // Если значение было установлено успешно (если слово корректно)
+                if (!word.IsEmpty())
+                {
+                    // Добавление слова в список содержащихся слов данного предложения
+                    newContainedWords.Add(word);
+
+                    // Замена соответствующего слова в исходной строке
+                    return word.instance;
+                }
+
+                // Удаление слова из исходного строки
+                return "";
+            });
+
+            // Если непосредственное содрежимое предложения отсутствует, удалить его
+            if (new Regex(@"^(\.|!|\?)+$").IsMatch(correctValue)) correctValue = "";
+
+            // Установление верного значения
+            if (!String.IsNullOrEmpty(correctValue))
+            {
+                _instance = correctValue;
+                containedWords = newContainedWords;
+            } else
+            {
+                Erase();
+            }
+        }
     }
 
     /** 
@@ -583,7 +750,7 @@ namespace TextLibrary
      * Отношение наследования (Word - LanguageUnit)
      * Отношение реализации (Word - IErasable)
      */
-    public class Word : LanguageUnit, IErasable
+    public class Word : LanguageUnit, IErasable, ICorrectable
     {
         // Публичное поле, через которое происходит обращение к приватному
         public override string instance
@@ -672,6 +839,58 @@ namespace TextLibrary
         public void Erase()
         {
             _instance = null;
+        }
+
+        // Метод устанавливающий в качестве нового значения откорректированное переданное
+        public void SetWithCorrecting(string value)
+        {
+            // Исправленное значение, инициализируем, сразу убирая лишние пробелы по краям, чтобы потом не тратитть ресурсы на это
+            string correctValue = value.Trim();
+
+            /**
+             * Проверка слова на корректность
+             */
+            if (!new Regex(@"^([A-Za-zА-ЯЁа-яё]+\-)?[A-Za-zА-ЯЁа-яё]+$").IsMatch(correctValue))
+            {
+                // Если значение - слово-приложение
+                if(new Regex(@"^.+\-.+$").IsMatch(correctValue))
+                {
+                    // Ищем составные слова
+                    MatchCollection matches = new Regex(@"([^\-]+)").Matches(correctValue);
+
+                    // Убрать лишние символы и вместе с тем оставить только два первых составных слова
+                    correctValue = GetOnlyLettersFromString(matches[0].Value) + "-" + GetOnlyLettersFromString(matches[1].Value);
+                } 
+                // Если значение - просто набор символов
+                else {
+                    correctValue = GetOnlyLettersFromString(correctValue);
+                }
+            }
+
+            // Установление верного значения
+            if (!String.IsNullOrEmpty(correctValue))
+            {
+                _instance = correctValue;
+            } else
+            {
+                Erase();
+            }
+        }
+
+        // Метод, удаляющий из строки все символы отличные от букв
+        private string GetOnlyLettersFromString(string value)
+        {
+            string result = "";
+
+            foreach(char ch in value)
+            {
+                if (Char.IsLetter(ch))
+                {
+                    result += ch;
+                }
+            }
+
+            return result;
         }
     }
 }
