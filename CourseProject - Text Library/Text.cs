@@ -34,7 +34,7 @@ namespace TextLibrary
              * - Последовательность символов может содержать сколько угодно предложений (в т.ч. простых).
              * - Текст корректен тогда, когда корректно каждое его предложение.
              */
-        set
+            set
             {
                 // Список найденных корректных предложений в тексте
                 List<Sentence> newContainedSentences = new List<Sentence>();
@@ -151,30 +151,15 @@ namespace TextLibrary
             List<Sentence> newContainedSentences = new List<Sentence>();
 
             // Добавление символа конца предложения (если его нет) в конец текста
-            if(!new Regex(@"(\.|!|\?)$").IsMatch(correctValue))
+            if (!new Regex(@"(\.|!|\?)$").IsMatch(correctValue))
             {
                 correctValue = correctValue + '.';
             }
 
+            // Очистка содержащихся предложений
+            containedSentences.Clear();
             // Исправление каждого предложения в тексте
-            correctValue = Regex.Replace(correctValue, @"[^(\.|!|\?)]+(\.|!|\?)+", (Match match) =>
-            {
-                // Исправление текущего предложения
-                Sentence sentence = new Sentence();
-                sentence.SetWithCorrecting(match.Value);
-
-                // Если успешно найдено и исправлено
-                if(!sentence.IsEmpty())
-                {
-                    // Добавить исправленное предложение в список содержащихся
-                    newContainedSentences.Add(sentence);
-                    // Замена предложения в исходном тексте на исправленное
-                    return sentence.instance;
-                }
-
-                // Если нет, то удалить предложение их исходного текста
-                return "";
-            });
+            correctValue = Regex.Replace(correctValue, @"[^(\.|!|\?)]+(\.|!|\?)+", CorrectSentence);
 
             // Добавление пробела после символов окончания строки
             correctValue = Regex.Replace(correctValue, @"(\.|!|\?)+([^\s])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
@@ -192,6 +177,24 @@ namespace TextLibrary
             {
                 Erase();
             }
+        }
+
+        private string CorrectSentence(Match match) {
+            // Исправление текущего предложения
+            Sentence sentence = new Sentence();
+            sentence.SetWithCorrecting(match.Value);
+
+            // Если успешно найдено и исправлено
+            if (!sentence.IsEmpty())
+            {
+                // Добавить исправленное предложение в список содержащихся
+                containedSentences.Add(sentence);
+                // Замена предложения в исходном тексте на исправленное
+                return sentence.instance;
+            }
+
+            // Если нет, то удалить предложение их исходного текста
+            return "";
         }
     }
 }
