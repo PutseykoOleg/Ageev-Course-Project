@@ -46,7 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TextLibrary.cs" />
+    <Compile Include="ErrorHandler.cs" />
+    <Compile Include="FileHandler.cs" />
+    <Compile Include="ICorrectable.cs" />
+    <Compile Include="IErasable.cs" />
+    <Compile Include="LanguageUnit.cs" />
+    <Compile Include="Sentence.cs" />
+    <Compile Include="Text.cs" />
+    <Compile Include="Word.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
