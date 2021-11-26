@@ -275,7 +275,7 @@ namespace TextLibrary
             }
 
             // Если в значении несколько предложений, то оставить только последнее
-            correctValue = Regex.Match(correctValue, @".*(\.|!|\?)").Value;
+            correctValue = Regex.Match(correctValue, @".*(\.|!|\?)+").Value;
 
             // Добавление пробелов после тех знаков, после которых это необходимо
             correctValue = Regex.Replace(correctValue, @"(,|\)|\]|})([^\s])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
