@@ -159,13 +159,10 @@ namespace TextLibrary
             // Очистка содержащихся предложений
             containedSentences.Clear();
             // Исправление каждого предложения в тексте
-            correctValue = Regex.Replace(correctValue, @"[^(\.|!|\?)]+(\.|!|\?)+", CorrectSentence);
+            correctValue = Regex.Replace(correctValue, @"[^(\.|!|\?)]*(\.|!|\?)+", CorrectSentence);
 
             // Добавление пробела после символов окончания строки
-            correctValue = Regex.Replace(correctValue, @"(\.|!|\?)+([^\s])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
-
-            // Удаление пустого предложения вначале строки, если такое возникло
-            correctValue = Regex.Replace(correctValue, @"^(\.|!|\?)+\s*", (Match match) => "");
+            correctValue = Regex.Replace(correctValue, @"((\.|!|\?)+)([^(\s|\.|!|\?)])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
 
             // Если в тексте есть хотя бы одно исправленное предложение, т.е. если он не пуст
             if (!String.IsNullOrEmpty(correctValue))

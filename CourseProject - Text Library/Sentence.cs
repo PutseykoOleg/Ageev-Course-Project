@@ -268,15 +268,14 @@ namespace TextLibrary
                  * 
                  * Делаем это во вложенном цикле, чтобы удалить все такие символы
                  */
-                while (new Regex(@"(,|\-|\(|\[|{|\s)(\.|!|\?)$").IsMatch(correctValue))
+                while (new Regex(@"(,|\-|\(|\[|{|\s)((\.|!|\?)+)").IsMatch(correctValue))
                 {
-                    correctValue = correctValue.Substring(0, correctValue.Length - 2) + correctValue[correctValue.Length - 1];
+                    correctValue = Regex.Replace(correctValue, @"(,|\-|\(|\[|{|\s)((\.|!|\?)+)", (Match match) => match.Groups[2].Value);
                 }
             }
 
             // Если в значении несколько предложений, то оставить только последнее
-            char[] endOfSentence = { '.', '!', '?' };
-            correctValue = correctValue.Substring(0, correctValue.IndexOfAny(endOfSentence) + 1);
+            correctValue = Regex.Match(correctValue, @".*(\.|!|\?)").Value;
 
             // Добавление пробелов после тех знаков, после которых это необходимо
             correctValue = Regex.Replace(correctValue, @"(,|\)|\]|})([^\s])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);

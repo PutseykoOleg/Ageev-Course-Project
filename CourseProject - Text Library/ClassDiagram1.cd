@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TextLibrary.ErrorHandler">
+    <Position X="12.5" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="TextLibrary.ErrorHandler.Handler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ErrorHandler.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AQAAAAgAAAAQBQAAAAAICAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>ErrorHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextLibrary.FileHandler">
+    <Position X="12.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>FileHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextLibrary.LanguageUnit">
+    <Position X="8.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LanguageUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextLibrary.MainForm">
+    <Position X="3.75" Y="2.5" Width="1.5" />
+    <Members>
+      <Field Name="components" Hidden="true" />
+      <Field Name="correctButton" Hidden="true" />
+      <Method Name="Dispose" Hidden="true" />
+      <Field Name="errorMessage" Hidden="true" />
+      <Method Name="InitializeComponent" Hidden="true" />
+      <Field Name="label1" Hidden="true" />
+      <Field Name="label2" Hidden="true" />
+      <Field Name="listOfSentences" Hidden="true" />
+      <Field Name="listOfWords" Hidden="true" />
+      <Field Name="readSentenceButton" Hidden="true" />
+      <Field Name="readTextButton" Hidden="true" />
+      <Field Name="readWordButton" Hidden="true" />
+      <Field Name="textArea" Hidden="true" />
+      <Field Name="writeButton" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AQGAAAEAgCGBABAAAASAEAACiCAgAABYAAICAAAAAIQ=</HashCode>
+      <FileName>MainForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextLibrary.Program">
+    <Position X="3.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextLibrary.Sentence">
+    <Position X="8.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AADAAAAAAEAAAAAAAAAAAAAACABAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Sentence.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TextLibrary.Text">
+    <Position X="6" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAACAAAACABAAAgAAAIAAAAAAAA=</HashCode>
+      <FileName>Text.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TextLibrary.Word">
+    <Position X="10.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAECABAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Word.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="TextLibrary.ICorrectable">
+    <Position X="7.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>ICorrectable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TextLibrary.IErasable">
+    <Position X="9.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IErasable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
