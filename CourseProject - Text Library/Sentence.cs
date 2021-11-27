@@ -221,6 +221,23 @@ namespace TextLibrary
             // Содержащиеся в исправленном предложении слова
             List<Word> newContainedWords = new List<Word>();
 
+            // Если в значении несколько предложений, то оставить только последнее
+            correctValue = Regex.Match(correctValue, @".*(\.|!|\?)+").Value;
+
+            // Добавление пробелов после тех знаков, после которых это необходимо
+            correctValue = Regex.Replace(correctValue, @"(,|\)|\]|})([^\s])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
+
+            // Добавление пробелов перед теми знаками, перед которыми это необходимо
+            correctValue = Regex.Replace(correctValue, @"([^\s])(\(|\[|{)", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
+
+            // Замена нескольких идущих подряд отдельных символов пробелом
+            correctValue = Regex.Replace(correctValue, @"\s+(\(|\)|\[|\]|{|}|'|""|,|\.|!|\?)*\s+", (Match match) => " ");
+
+            // Очистка содержащихся слов
+            containedWords.Clear();
+            // Исправление слов
+            correctValue = Regex.Replace(correctValue, @"[^(\s|\(|\)|\[|\]|{|}|'|""|,|\.|!|\?)]+", CorrectWord);
+
             /** 
              * Если не содержит признак начала предложения (заглавная буква, кавычки или цифра), то предполагается,
              * что передается некорректное предложение
@@ -273,23 +290,6 @@ namespace TextLibrary
                     correctValue = Regex.Replace(correctValue, @"(,|\-|\(|\[|{|\s)((\.|!|\?)+)", (Match match) => match.Groups[2].Value);
                 }
             }
-
-            // Если в значении несколько предложений, то оставить только последнее
-            correctValue = Regex.Match(correctValue, @".*(\.|!|\?)+").Value;
-
-            // Добавление пробелов после тех знаков, после которых это необходимо
-            correctValue = Regex.Replace(correctValue, @"(,|\)|\]|})([^\s])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
-
-            // Добавление пробелов перед теми знаками, перед которыми это необходимо
-            correctValue = Regex.Replace(correctValue, @"([^\s])(\(|\[|{)", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
-
-            // Замена нескольких идущих подряд отдельных символов пробелом
-            correctValue = Regex.Replace(correctValue, @"\s+(\(|\)|\[|\]|{|}|'|""|,|\.|!|\?)*\s+", (Match match) => " ");
-
-            // Очистка содержащихся слов
-            containedWords.Clear();
-            // Исправление слов
-            correctValue = Regex.Replace(correctValue, @"[^(\s|\(|\)|\[|\]|{|}|'|""|,|\.|!|\?)]+", CorrectWord);
 
             // Если непосредственное содрежимое предложения отсутствует, удалить его
             if (new Regex(@"^(\.|!|\?)+$").IsMatch(correctValue)) correctValue = "";

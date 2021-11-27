@@ -42,6 +42,9 @@ namespace TextLibrary
             // Подсветка кнопки исправления текста
             correctButton.BackColor = Color.FromArgb(255, 192, 192);
             correctButton.ForeColor = Color.FromArgb(192, 0, 0);
+
+            correctButton.Enabled = true;
+            writeButton.Enabled = false;
         }
 
         // Метод удаляющий ошибку
@@ -53,6 +56,9 @@ namespace TextLibrary
             // Подсветка кнопки исправления текста
             correctButton.BackColor = SystemColors.Control;
             correctButton.ForeColor = SystemColors.ControlText;
+
+            correctButton.Enabled = false;
+            writeButton.Enabled = true;
         }
 
         // Метод, вызывающийся при загрузке формы
@@ -64,6 +70,8 @@ namespace TextLibrary
 
             // Линковка обработчика ошибок и созданной формы
             ErrorHandler.form = this;
+
+            HideError();
         }
 
         // Метод, вызывающийся при изменении текста пользователем

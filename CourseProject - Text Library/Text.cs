@@ -162,7 +162,7 @@ namespace TextLibrary
             correctValue = Regex.Replace(correctValue, @"[^(\.|!|\?)]*(\.|!|\?)+", CorrectSentence);
 
             // Добавление пробела после символов окончания строки
-            correctValue = Regex.Replace(correctValue, @"((\.|!|\?)+)([^(\s|\.|!|\?)])", (Match match) => match.Groups[1].Value + " " + match.Groups[2].Value);
+            correctValue = Regex.Replace(correctValue, @"((\.|!|\?)+)([^(\s|\.|!|\?)]+)", (Match match) => match.Groups[1].Value + " " + match.Groups[3].Value);
 
             // Если в тексте есть хотя бы одно исправленное предложение, т.е. если он не пуст
             if (!String.IsNullOrEmpty(correctValue))
