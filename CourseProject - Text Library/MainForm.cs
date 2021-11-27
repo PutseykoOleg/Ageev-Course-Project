@@ -44,7 +44,6 @@ namespace TextLibrary
             correctButton.ForeColor = Color.FromArgb(192, 0, 0);
 
             correctButton.Enabled = true;
-            writeButton.Enabled = false;
         }
 
         // Метод удаляющий ошибку
@@ -58,7 +57,6 @@ namespace TextLibrary
             correctButton.ForeColor = SystemColors.ControlText;
 
             correctButton.Enabled = false;
-            writeButton.Enabled = true;
         }
 
         // Метод, вызывающийся при загрузке формы
